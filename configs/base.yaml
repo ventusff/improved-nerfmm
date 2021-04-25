@@ -1,0 +1,70 @@
+expname: default
+
+# device_ids: [1, 0] # multiple gpu
+device_ids: [0] # single gpu
+
+data:
+  white_bkgd: false
+  data_dir: null
+  #=========
+  N_rays: 1024      # numer of sampled rays in training.
+  batch_size: null  # null or leave empty for non-batched version, a integer for batch size
+  downscale: 1.     # image resolution downscale factor
+  #=========
+  near: 0.0
+  far: 1.0
+
+model:
+  framework: NeRF     # options: [NeRF, SirenNeRF]
+
+  # nerf base
+  perturb: 1.
+  raw_noise_std: 1.
+  N_samples: 128      # number of points sampled for each ray, in volume rendering process.
+  N_importance: 0
+  net_d: 8
+  net_w: 256
+  net_skips: [4]
+  multires: 10
+  multires_views: 4
+  use_viewdirs: true  # view dependence of NeRF
+  sigma_clamp_mode: relu  # [relu, softplus]
+  rayschunk: 131072
+  val_rayschunk: 32768
+  netchunk: 524288
+
+  use_fine_model: false
+  net_d_fine:     # will only be used if set use_fine_model to True.
+  net_w_fine:     # will only be used if set use_fine_model to True
+  net_skips_fine: # will only be used if set use_fine_model to True
+
+  # nerf-minus-minus
+  so3_representation: 'axis-angle'    # options: [quaternion, axis-angle, rotation6D]
+  intrinsics_representation: 'square' # options: [square, ratio, exp]
+  initial_fov: 53.13  # unit: degree
+
+training:
+  log_root_dir: "logs"
+  w_img: 1.0
+  w_perceptual: 0.  # options: 0. for no perceptual model & loss, >0 to enable
+  i_save: 900       # unit: seconds
+  i_backup: 50000   # unit: itertation steps
+
+  # learning rate anneal
+  step_size_nerf: 10      # unit: epochs
+  lr_anneal_nerf: 0.9954
+  lr_nerf: 1.0e-3
+
+  step_size_param: 100    # unit: epochs
+  lr_anneal_param: 0.9
+  lr_param: 1.0e-3
+
+  num_epoch: 10000
+  num_epoch_pre: 0  # number of epochs run before refinement
+
+  ckpt_file: null # will be read by python as None
+  ckpt_ignore_keys: []     # only change if you want to drop certain keys in the saved checkpionts.
+  ckpt_only_use_keys: null # only change if you want to only use certain keys in the saved checkpionts.
+  no_reload: false
+
+  novel_view_synthesis: false

@@ -1,0 +1,36 @@
+expname: nerfmm_castle_1041_siren_si40_prefine_softplus
+
+data:
+  data_dir: ./data/castle_1041
+
+  #=========
+  N_rays: 1024
+  downscale: 4.
+  #=========
+
+model:
+  framework: SirenNeRF
+  net_w: 128
+  # nerf-minus-minus
+  so3_representation: 'axis-angle'
+  # siren
+  siren_sigma_mul: 40.0 # multiply the raw_sigma output of SirenNeRF
+  siren_first_layer_w0: 30.0
+  siren_following_layers_w0: 1.0
+
+  sigma_clamp_mode: softplus
+
+training:
+  # learning rate anneal
+  step_size_nerf: 10    # unit: epochs
+  lr_anneal_nerf: 0.9954 #0.9954
+  lr_nerf: 1.0e-3
+
+  step_size_param: 100  # unit: epochs
+  lr_anneal_param: 0.9
+  lr_param: 1.0e-3
+
+  novel_view_synthesis: false  # whether do novel view synthesis during traning
+
+  num_epoch: 10000
+  num_epoch_pre: 1000

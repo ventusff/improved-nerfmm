@@ -1,0 +1,58 @@
+data:
+  N_rays: 1024
+  batch_size: null
+  data_dir: ./data/castle_4614
+  downscale: 4.0
+  far: 1.0
+  near: 0.0
+  white_bkgd: false
+device_ids:
+- 0
+expname: nerfmm_castle_4614_siren_nvs_si40_pre_softplus
+model:
+  N_importance: 0
+  N_samples: 128
+  framework: SirenNeRF
+  initial_fov: 53.13
+  intrinsics_representation: square
+  multires: 10
+  multires_views: 4
+  net_d: 8
+  net_d_fine: null
+  net_skips:
+  - 4
+  net_skips_fine: null
+  net_w: 128
+  net_w_fine: null
+  netchunk: 524288
+  perturb: 1.0
+  raw_noise_std: 1.0
+  rayschunk: 131072
+  sigma_clamp_mode: softplus
+  siren_first_layer_w0: 30.0
+  siren_following_layers_w0: 1.0
+  siren_sigma_mul: 40.0
+  so3_representation: axis-angle
+  use_fine_model: false
+  use_viewdirs: true
+  val_rayschunk: 32768
+training:
+  ckpt_file: null
+  ckpt_ignore_keys: []
+  ckpt_only_use_keys: null
+  exp_dir: logs/nerfmm_castle_4614_siren_nvs_si40_pre_softplus
+  i_backup: 50000
+  i_save: 900
+  log_root_dir: logs
+  lr_anneal_nerf: 0.9954
+  lr_anneal_param: 0.9
+  lr_nerf: 0.001
+  lr_param: 0.001
+  no_reload: false
+  novel_view_synthesis: false
+  num_epoch: 10000
+  num_epoch_pre: 1000
+  step_size_nerf: 10
+  step_size_param: 100
+  w_img: 1.0
+  w_perceptual: 0.0

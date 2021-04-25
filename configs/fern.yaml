@@ -1,0 +1,26 @@
+expname: fern_4
+
+data:
+  data_dir: ./data/nerf_llff_data/fern/images_4
+
+  #=========
+  N_rays: 1024
+  #=========
+
+model:
+  framework: NeRF
+  net_w: 128
+  # nerf-minus-minus
+  so3_representation: 'axis-angle'
+
+training:
+  # learning rate anneal
+  step_size_nerf: 10    # unit: epochs
+  lr_anneal_nerf: 0.9954 #0.9954
+  lr_nerf: 1.0e-3
+
+  step_size_param: 100  # unit: epochs
+  lr_anneal_param: 0.9
+  lr_param: 1.0e-3
+
+  novel_view_synthesis: false  # whether do novel view synthesis during traning

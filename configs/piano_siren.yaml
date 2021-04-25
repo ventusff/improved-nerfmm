@@ -1,0 +1,31 @@
+expname: piano_siren
+
+data:
+  data_dir: ./data/piano
+
+  #=========
+  N_rays: 1024
+  downscale: 4.
+  #=========
+
+model:
+  framework: SirenNeRF
+  net_w: 128
+  # nerf-minus-minus
+  so3_representation: 'axis-angle'
+  # siren
+  siren_sigma_mul: 10.0 # multiply the raw_sigma output of SirenNeRF
+  siren_first_layer_w0: 30.0
+  siren_following_layers_w0: 1.0
+
+training:
+  # learning rate anneal
+  step_size_nerf: 10    # unit: epochs
+  lr_anneal_nerf: 0.9954 #0.9954
+  lr_nerf: 1.0e-3
+
+  step_size_param: 100  # unit: epochs
+  lr_anneal_param: 0.9
+  lr_param: 1.0e-3
+
+  novel_view_synthesis: false  # whether do novel view synthesis during traning
