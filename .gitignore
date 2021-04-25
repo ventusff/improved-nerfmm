@@ -1,0 +1,8 @@
+.spyproject/
+.vscode/
+logs/
+data/
+dev_test/
+out/
+**/__pycache__
+*.pyc
