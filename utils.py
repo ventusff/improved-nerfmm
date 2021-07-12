@@ -43,11 +43,11 @@ def load_yaml(path, default_path=None):
     return config
 
 
-def save_config(datadict, path):
+def save_config(datadict: ForceKeyErrorDict, path: str):
     datadict.training.ckpt_file = None
     datadict.training.pop('exp_dir')
     with open(path, 'w', encoding='utf8') as outfile:
-        yaml.dump(datadict, outfile, default_flow_style=False)
+        yaml.dump(datadict.to_dict(), outfile, default_flow_style=False)
 
 
 def update_config(config, unknown):

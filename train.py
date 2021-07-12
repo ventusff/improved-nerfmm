@@ -125,7 +125,7 @@ def main_function(args):
     utils.backup(os.path.join(exp_dir, 'backup'))
 
     # save configs
-    utils.save_config(args.to_dict(), os.path.join(exp_dir, 'config.yaml'))
+    utils.save_config(args, os.path.join(exp_dir, 'config.yaml'))
 
     # checkpoints
     checkpoint_io = CheckpointIO(checkpoint_dir=os.path.join(exp_dir, 'ckpts'))
