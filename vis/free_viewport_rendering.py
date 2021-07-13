@@ -132,8 +132,8 @@ def interpolate_render(args):
     render_c2ws = np.stack(render_c2ws, axis=0)
 
     rgbs, depths = render_full(intr, render_c2ws, H, W, near, far, render_kwargs_test, model, device, batch_size=4)
-    imageio.mimwrite(os.path.join('out', '{}_spiral_rgb_{}x{}.mp4'.format(args.expname, H, W)), rgbs, fps=30, quality=8)
-    imageio.mimwrite(os.path.join('out', '{}_spiral_depth_{}x{}.mp4'.format(args.expname, H, W)), depths, fps=30, quality=8)
+    imageio.mimwrite(os.path.join('out', '{}_interpolate_rgb_{}x{}.mp4'.format(args.expname, H, W)), rgbs, fps=30, quality=8)
+    imageio.mimwrite(os.path.join('out', '{}_interpolate_depth_{}x{}.mp4'.format(args.expname, H, W)), depths, fps=30, quality=8)
 
 
 if __name__ == "__main__":
