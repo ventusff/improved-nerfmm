@@ -295,4 +295,10 @@ def load_config(args, unknown, base_config_path=os.path.join('configs', 'base.ya
     elif isinstance(config.device_ids, str):
         config.device_ids = [int(m) for m in config.device_ids.split(',')]
 
+    # add other configs in args to config
+    other_dict = vars(args)
+    other_dict.pop('config')
+    other_dict.pop('load_dir')
+    config.update(other_dict)
+
     return config

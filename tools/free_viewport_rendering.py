@@ -1,6 +1,6 @@
 import utils
 from checkpoints import sorted_ckpts
-from vis.vis_utils import render_full
+from tools.vis_utils import render_full
 from models.cam_params import CamParams
 from models.frameworks import create_model
 from geometry import c2w_track_spiral, poses_avg
@@ -136,6 +136,59 @@ def interpolate_render(args):
     imageio.mimwrite(os.path.join('out', '{}_interpolate_depth_{}x{}.mp4'.format(args.expname, H, W)), depths, fps=30, quality=8)
 
 
+def select_render(args):
+    import pickle
+    
+    #--------------
+    # parameters
+    #--------------  
+    utils.cond_mkdir(os.path.join('out', 'views'))
+
+    #--------------
+    # Load model
+    #--------------
+    device_ids = args.device_ids
+    device = "cuda:{}".format(device_ids[0])
+    exp_dir = args.training.exp_dir
+    print("=> Experiments dir: {}".format(exp_dir))
+
+    model, render_kwargs_train, render_kwargs_test, grad_vars = create_model(
+        args, model_type=args.model.framework)
+
+    if args.training.ckpt_file is None or args.training.ckpt_file == 'None':
+        # automatically load 'final_xxx.pt' or 'latest.pt'
+        ckpt_file = sorted_ckpts(os.path.join(exp_dir, 'ckpts'))[-1]
+    else:
+        ckpt_file = args.training.ckpt_file
+
+    print("=> Loading ckpt file: {}".format(ckpt_file))
+    state_dict = torch.load(ckpt_file, map_location=device)
+    model_dict = state_dict['model']
+    model = model.to(device)
+    model.load_state_dict(model_dict)
+
+
+    #--------------
+    # Load camera parameters
+    #--------------
+    cam_params = CamParams.from_state_dict(state_dict['cam_param'])
+    H = cam_params.H0
+    W = cam_params.W0
+    c2ws = cam_params.get_camera2worlds().data.cpu().numpy()
+    intr = cam_params.get_intrinsic(H, W).data.cpu().numpy()
+
+    # calculate params for generate path
+    near = args.data.near
+    far = args.data.far
+
+    rgbs, depths = render_full(intr, c2ws[0:1], H, W, near, far, render_kwargs_test, model, device, batch_size=4, imgscale=False)
+    
+    for i, (rgb, depth) in enumerate(zip(rgbs, depths)):
+        prefix = os.path.join('out', 'views', '{:04d}'.format(i))
+        # imageio.imsave("{}_rgb.jpg".format(prefix), rgb)
+        # imageio.imsave("{}_depth.jpg".format(prefix), depth)
+        pickle.dump(depth, open("{}_depth.pt".format(prefix), 'wb'))
+
 if __name__ == "__main__":
     # Arguments
     parser = utils.create_args_parser()
@@ -147,3 +200,7 @@ if __name__ == "__main__":
         spiral_render(config)
     elif args.render_type == 'interpolate':
         interpolate_render(config)
+    elif args.render_type == 'select':
+        select_render(config)
+    else:
+        print("PLease choose a valid render_type in [spiral, interpolate, select]")

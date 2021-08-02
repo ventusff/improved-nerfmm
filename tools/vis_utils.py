@@ -52,7 +52,7 @@ def get_rays_opencv_np(intrinsics: np.ndarray, c2w: np.ndarray, H: int, W: int):
     return rays_o, rays_d
 
 
-def render_full(intr: np.ndarray, c2w: np.ndarray, H, W, near, far, render_kwargs, scene_model, device="cuda", batch_size=1):
+def render_full(intr: np.ndarray, c2w: np.ndarray, H, W, near, far, render_kwargs, scene_model, device="cuda", batch_size=1, imgscale=True):
     rgbs = []
     depths = []
     scene_model.to(device)
@@ -63,7 +63,10 @@ def render_full(intr: np.ndarray, c2w: np.ndarray, H, W, near, far, render_kwarg
 
     def to_img(tensor):
         tensor = tensor.reshape(tensor.shape[0], H, W, -1).data.cpu().numpy()
-        return (255*np.clip(tensor, 0, 1)).astype(np.uint8)
+        if imgscale:
+            return (255*np.clip(tensor, 0, 1)).astype(np.uint8)
+        else:
+            return tensor
 
     def render_chunk(c2w):
         rays_o, rays_d = get_rays_opencv_np(intr, c2w, H, W)
@@ -77,7 +80,9 @@ def render_full(intr: np.ndarray, c2w: np.ndarray, H, W, near, far, render_kwarg
                 detailed_output=False,   # to return acc map and disp map
                 show_progress=True,
                 **render_kwargs)
-        return to_img(rgb), to_img((depth-near)/(far-near))
+        if imgscale:
+            depth = (depth-near)/(far-near)
+        return to_img(rgb), to_img(depth)
 
     for i in tqdm(range(0, c2w.shape[0], batch_size), desc="=> Rendering..."):
         rgb_i, depth_i = render_chunk(c2w[i:i+batch_size])
