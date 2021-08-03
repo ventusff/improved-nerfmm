@@ -315,7 +315,9 @@ def ray_integration(
         torch.cumprod(opacity_alpha_shifted, dim=-1)[..., :-1]
 
     rgb_map = torch.sum(visibility_weights[..., None] * raw_rgb, -2)
-    depth_map = torch.sum(visibility_weights * z_vals, -1)
+    # depth_map = torch.sum(visibility_weights * z_vals, -1)
+    # NOTE: to get the correct depth map, the sum of weights must be 1!
+    depth_map = torch.sum(visibility_weights / (visibility_weights.sum(-1, keepdim=True)+1e-10) * z_vals, -1)
     acc_map = torch.sum(visibility_weights, -1)
     disp_map = 1.0 / torch.max(
         1e-10 * torch.ones_like(depth_map),
