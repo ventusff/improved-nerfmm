@@ -482,19 +482,19 @@ python train.py --config ./configs/fern.yaml --expname fern_refine --training:ck
 - To render with `camera2world` matrices interpolated from the learned pose
 
 ```shell
-python vis/free_viewport_rendering.py --load_dir /path/to/pretrained/exp_dir --render_type interpolate
+python tools/free_viewport_rendering.py --load_dir /path/to/pretrained/exp_dir --render_type interpolate
 ```
 
 - To render with spiral camera paths as in the original NeRF repo
 
 ```shell
-python vis/free_viewport_rendering.py --load_dir /path/to/pretrained/exp_dir --render_type spiral
+python tools/free_viewport_rendering.py --load_dir /path/to/pretrained/exp_dir --render_type spiral
 ```
 
 ### Visualize learned camera pose
 
 ```shell
-python vis/plot_camera_pose.py --load_dir /path/to/pretrained/exp_dir
+python tools/plot_camera_pose.py --load_dir /path/to/pretrained/exp_dir
 ```
 
 Notice that the learned camera `phi` & `t` is actually for `camera2world` matrices, the inverse of `camera extrinsics`
