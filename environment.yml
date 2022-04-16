@@ -72,7 +72,6 @@ dependencies:
     - protobuf==3.15.8
     - pyparsing==2.4.7
     - python-dateutil==2.8.1
-    - pytorch3d==0.3.0
     - pywavelets==1.1.1
     - pyyaml==5.4.1
     - scikit-image==0.18.1
