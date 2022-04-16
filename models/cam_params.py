@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from pytorch3d import transforms as tr3d
+import models.pytorch3d_trans as tr3d
 
 
 class CamParams(nn.Module):
